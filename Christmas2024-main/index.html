@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventHub - Post & Discover Events</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --orange: #FF5E13;
+            --yellow: #F6A800;
+            --teal: #009B77;
+            --brown: #8B4513;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--white) 0%, #FFF5F0 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.0rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 70px;
+            height: 60px;
+            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            overflow: hidden;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--orange);
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--orange);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 94, 19, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--teal);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 155, 119, 0.3);
+        }
+
+        .hero {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            color: var(--orange);
+            margin-bottom: 1rem;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .hero-visual {
+            position: relative;
+            height: 400px;
+            display : none;
+        }
+
+        /* Tablet and larger screens */
+@media screen and (min-width: 768px) {
+    .hero-visual {
+        display: block;
+    }
+}
+
+        .decorative-circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.2;
+        }
+
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--yellow);
+            top: 50px;
+            right: 50px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            background: var(--orange);
+            bottom: 50px;
+            left: 50px;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .circle-3 {
+            width: 150px;
+            height: 150px;
+            background: var(--teal);
+            top: 100px;
+            left: 100px;
+            animation: float 7s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .features {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--teal);
+            margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            border-top: 4px solid var(--orange);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card:nth-child(1) .feature-icon {
+            background: linear-gradient(135deg, var(--orange), var(--yellow));
+            color: var(--white);
+        }
+
+        .feature-card:nth-child(2) .feature-icon {
+            background: linear-gradient(135deg, var(--teal), var(--yellow));
+            color: var(--white);
+        }
+
+        .feature-card:nth-child(3) .feature-icon {
+            background: linear-gradient(135deg, var(--orange), var(--teal));
+            color: var(--white);
+        }
+
+        .feature-card h3 {
+            color: var(--teal);
+            margin-bottom: 0.5rem;
+        }
+
+        .events-section {
+            background: linear-gradient(135deg, var(--teal), #00b894);
+            padding: 4rem 2rem;
+            margin: 4rem 0;
+        }
+
+        .events-section .section-title {
+            color: var(--white);
+        }
+
+        .events-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .event-card {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .event-card:hover {
+            transform: scale(1.05);
+        }
+
+        .event-image {
+            height: 200px;
+            background: linear-gradient(135deg, var(--yellow), var(--orange));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--white);
+        }
+
+        .gallery-section {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 2rem;
+        }
+
+        .gallery-slider {
+            position: relative;
+            height: 500px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .gallery-track {
+            display: flex;
+            height: 100%;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-slide {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .gallery-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: var(--white);
+            padding: 2rem;
+        }
+
+        .gallery-caption h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .gallery-nav {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        .gallery-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .gallery-dot.active {
+            background: var(--white);
+            transform: scale(1.3);
+            border-color: var(--orange);
+        }
+
+        .gallery-dot:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .gallery-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--orange);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+            z-index: 10;
+            border: none;
+        }
+
+        .gallery-arrow:hover {
+            background: var(--white);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .gallery-arrow.prev {
+            left: 20px;
+        }
+
+        .gallery-arrow.next {
+            right: 20px;
+        }
+
+        .event-content {
+            padding: 1.5rem;
+        }
+
+        .event-date {
+            color: var(--orange);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-title {
+            color: var(--teal);
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-location {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .countdown {
+            background: linear-gradient(135deg, var(--teal), #00b894);
+            color: var(--white);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .countdown-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .countdown-label {
+            font-size: 0.7rem;
+            opacity: 0.9;
+        }
+
+        .social-media {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            justify-content: center;
+        }
+
+        .social-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-decoration: none;
+            transition: transform 0.3s;
+            font-size: 1rem;
+        }
+
+        .social-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .social-icon.facebook {
+            background: #1877F2;
+        }
+
+        .social-icon.twitter {
+            background: #1DA1F2;
+        }
+
+        .social-icon.instagram {
+            background: linear-gradient(45deg, #F58529, #DD2A7B, #8134AF);
+        }
+
+        .social-icon.linkedin {
+            background: #0A66C2;
+        }
+
+        .cta-section {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 4rem 2rem;
+            text-align: center;
+            background: var(--orange);
+            border-radius: 20px;
+        }
+
+        .cta-section h2 {
+            color: var(--white);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            color: var(--white);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .lineup-section {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .lineup-image-container {
+            margin-top: 2rem;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .lineup-placeholder {
+            width: 100%;
+            height: 600px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, var(--orange) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lineup-placeholder::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                rgba(255, 94, 19, 0.3) 0%, 
+                rgba(246, 168, 0, 0.3) 50%, 
+                rgba(0, 155, 119, 0.3) 100%);
+            animation: gradientShift 4s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 0.5; transform: rotate(0deg); }
+            50% { opacity: 0.8; transform: rotate(180deg); }
+        }
+
+        .lineup-placeholder-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .lineup-icon {
+            font-size: 8rem;
+            margin-bottom: 1rem;
+            display: block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .lineup-placeholder-text {
+            color: var(--white);
+            font-size: 2rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .about-section {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 2rem;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        .about-text {
+            text-align: left;
+        }
+
+        .about-text h3 {
+            color: var(--teal);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .about-text p {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .about-highlights {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+
+        .about-highlights li {
+            color: #333;
+            padding: 0.8rem 0;
+            padding-left: 2rem;
+            position: relative;
+            font-size: 1.05rem;
+        }
+
+        .about-highlights li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--orange);
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+
+        .video-container {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, var(--teal) 0%, #00b894 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-placeholder::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        .play-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--teal);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 2;
+            border: 4px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+            background: var(--white);
+        }
+
+        .video-text {
+            color: var(--white);
+            font-size: 1.5rem;
+            margin-top: 1rem;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+        }
+
+        @media (max-width: 768px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .lineup-placeholder {
+                height: 400px;
+            }
+
+            .lineup-icon {
+                font-size: 5rem;
+            }
+
+            .lineup-placeholder-text {
+                font-size: 1.5rem;
+            }
+
+            .video-placeholder {
+                height: 300px;
+            }
+        }
+
+        footer {
+            background: var(--teal);
+            color: var(--white);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--orange);
+            transition: 0.3s;
+        }
+
+        .banner {
+            width: 100%;
+            background: linear-gradient(180deg, #FFE5D9 0%, #FFFFFF 100%);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .banner-content {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0;
+            height: 500px;
+            position: relative;
+        }
+
+        /* Tablet and larger screens */
+@media screen and (min-width: 768px) {
+    .banner-content {
+        max-width: 1400px;
+        padding: 0;
+        height: 1100px;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .banner-content {
+        height: 1600px;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .banner-content {
+        height: 1800px;
+    }
+}
+
+
+
+        .banner-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .sun {
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .sun-rays {
+            animation: rotate 20s linear infinite;
+            transform-origin: 950px 100px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .people {
+            animation: wave 2s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--white);
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+                display: none;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .banner-svg {
+                max-height: 250px;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                margin-top : -20px;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .hero-visual {
+                height: 300px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .banner-svg {
+                max-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="./Assests/WhatsApp_Image_2026-01-03_at_22.30.43-removebg-preview.png" alt="EventHub Logo">
+                </div>
+               
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#events">Upcoming Events</a></li>
+                <li><a href="#lineup">Lineup</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <section class="banner">
+        <div class="banner-content">
+            <img src="./Assests/date.webp" alt="Events Banner" class="banner-image">
+        </div>
+    </section>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>I FOUND MY PEOPLE</h1>
+            <p>A matured series of Soul, Neo-Soul, Afro House & Deep House Lifestyle Picnic Events. It is more than an event…it’s a soulful homecoming space where people can feel seen, heard, and celebrated — through rhythm, food, culture, and intentional gathering.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary">BUY TICKETS</button>
+                <!--/* <button class="btn btn-secondary">Browse Events</button> */-->
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="decorative-circle circle-1"></div>
+            <div class="decorative-circle circle-2"></div>
+            <div class="decorative-circle circle-3"></div>
+        </div>
+    </section>
+
+
+
+    <section class="events-section" id="events">
+        <h2 class="section-title">Upcoming Events</h2>
+        <div class="events-grid">
+            <div class="event-card">
+                <div class="event-image">🎵</div>
+                <div class="event-content">
+                    <div class="event-date">February 28, 2026</div>
+                    <h3 class="event-title">I FOUND MY PEOPLE</h3>
+                    <p class="event-location">📍 To be confirmed</p>
+                    <div class="countdown">
+                        <div>Event starts in:</div>
+                        <div class="countdown-timer" data-date="2026-02-28T18:00:00">
+                            <div class="countdown-item">
+                                <span class="countdown-value" data-days>70</span>
+                                <span class="countdown-label">Days</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span class="countdown-value" data-hours>12</span>
+                                <span class="countdown-label">Hours</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span class="countdown-value" data-minutes>30</span>
+                                <span class="countdown-label">Mins</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span class="countdown-value" data-seconds>45</span>
+                                <span class="countdown-label">Secs</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/* <div class="social-media">
+                        <a href="#" class="social-icon facebook">f</a>
+                        <a href="#" class="social-icon twitter">𝕏</a>
+                        <a href="#" class="social-icon instagram">📷</a>
+                        <a href="#" class="social-icon linkedin">in</a>
+                    </div> */-->
+                    <button class="btn btn-primary">Buy Tickets </button>
+                </div>
+            </div>
+            <!--/* <div class="event-card">
+                <div class="event-image">💼</div>
+                <div class="event-content">
+                    <div class="event-date">March 20, 2026</div>
+                    <h3 class="event-title">Tech Conference 2026</h3>
+                    <p class="event-location">📍 Convention Center, SF</p>
+                    <div class="countdown">
+                        <div>Event starts in:</div>
+                        <div class="countdown-timer" data-date="2026-03-20T09:00:00">
+                            <div class="countdown-item">
+                                <span class="countdown-value" data-days>75</span>
+                                <span class="countdown-label">Days</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span class="countdown-value" data-hours>5</span>
+                                <span class="countdown-label">Hours</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span class="countdown-value" data-minutes>15</span>
+                                <span class="countdown-label">Mins</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span class="countdown-value" data-seconds>30</span>
+                                <span class="countdown-label">Secs</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="social-media">
+                        <a href="#" class="social-icon facebook">f</a>
+                        <a href="#" class="social-icon twitter">𝕏</a>
+                        <a href="#" class="social-icon instagram">📷</a>
+                        <a href="#" class="social-icon linkedin">in</a>
+                    </div>
+                    <button class="btn btn-primary">Learn More</button>
+                </div>
+            </div> */-->
+            <!--/* <div class="event-card">
+                <div class="event-image">🎨</div>
+                <div class="event-content">
+                    <div class="event-date">March 25, 2026</div>
+                    <h3 class="event-title">Art Exhibition</h3>
+                    <p class="event-location">📍 Modern Gallery, LA</p>
+                    <div class="countdown">
+                        <div>Event starts in:</div>
+                        <div class="countdown-timer" data-date="2026-03-25T14:00:00">
+                            <div class="countdown-item">
+                                <span class="countdown-value" data-days>80</span>
+                                <span class="countdown-label">Days</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span class="countdown-value" data-hours>8</span>
+                                <span class="countdown-label">Hours</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span class="countdown-value" data-minutes>45</span>
+                                <span class="countdown-label">Mins</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span class="countdown-value" data-seconds>20</span>
+                                <span class="countdown-label">Secs</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="social-media">
+                        <a href="#" class="social-icon facebook">f</a>
+                        <a href="#" class="social-icon twitter">𝕏</a>
+                        <a href="#" class="social-icon instagram">📷</a>
+                        <a href="#" class="social-icon linkedin">in</a>
+                    </div>
+                    <button class="btn btn-primary">Learn More</button>
+                </div>
+            </div> */-->
+        </div>
+    </section>
+
+    <section class="lineup-section" id="lineup">
+        <h2 class="section-title">Spectacular Lineup</h2>
+        <div class="lineup-image-container">
+            <div class="lineup-placeholder">
+                <div class="lineup-placeholder-content">
+                    <span class="lineup-icon">🎭🎸🎤🎹</span>
+                    <div class="lineup-placeholder-text">Featured Performers Coming Soon</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <section class="gallery-section" id="gallery">
+        <h2 class="section-title">Event Gallery</h2>
+        <div class="gallery-slider">
+            <div class="gallery-track">
+                <div class="gallery-slide">
+                    <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1200&h=500&fit=crop" alt="Music Concert">
+                    <!--/* <div class="gallery-caption">
+                        <h3>Music & Entertainment</h3>
+                        <p>Experience unforgettable live performances</p>
+                    </div> */-->
+                </div>
+                <div class="gallery-slide">
+                    <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=1200&h=500&fit=crop" alt="Tech Conference">
+                    <!--/* <div class="gallery-caption">
+                        <h3>Tech Conferences</h3>
+                        <p>Connect with industry leaders and innovators</p>
+                    </div> */-->
+                </div>
+                <div class="gallery-slide">
+                    <img src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=1200&h=500&fit=crop" alt="Food Festival">
+                    <!--/* <div class="gallery-caption">
+                        <h3>Food & Culture</h3>
+                        <p>Discover diverse culinary experiences</p>
+                    </div> */-->
+                </div>
+                <div class="gallery-slide">
+                    <img src="https://images.unsplash.com/photo-1506157786151-b8491531f063?w=1200&h=500&fit=crop" alt="Art Exhibition">
+                    <!--/* <div class="gallery-caption">
+                        <h3>Art & Design</h3>
+                        <p>Explore creativity and inspiration</p>
+                    </div> */-->
+                </div>
+                <div class="gallery-slide">
+                    <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?w=1200&h=500&fit=crop" alt="Sports Event">
+                    <!--/* <div class="gallery-caption">
+                        <h3>Sports & Fitness</h3>
+                        <p>Join the action and stay active</p>
+                    </div> */-->
+                </div>
+            </div>
+            <button class="gallery-arrow prev">‹</button>
+            <button class="gallery-arrow next">›</button>
+            <div class="gallery-nav">
+                <span class="gallery-dot active"></span>
+                <span class="gallery-dot"></span>
+                <span class="gallery-dot"></span>
+                <span class="gallery-dot"></span>
+                <span class="gallery-dot"></span>
+            </div>
+        </div>
+    </section>
+
+    <!--/* <section class="features" id="features">
+        <h2 class="section-title">Why Choose EventHub?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📅</div>
+                <h3>Easy Event Creation</h3>
+                <p>Create and publish your events in minutes with our intuitive interface. Add all the details your attendees need.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>Reach Your Audience</h3>
+                <p>Connect with thousands of potential attendees. Our platform helps you find the right people for your events.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Track Attendance</h3>
+                <p>Monitor registrations, send updates, and manage your events efficiently with our comprehensive tools.</p>
+            </div>
+        </div>
+    </section> */-->
+
+    <section class="about-section" id="about">
+        <h2 class="section-title">About the Event</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <h3>An Unforgettable Experience Awaits</h3>
+                <p>Join us for the most spectacular event of the year! Our carefully curated lineup brings together world-class performers, innovative experiences, and a vibrant community atmosphere.</p>
+                <p>Whether you're a music enthusiast, art lover, or simply looking for an amazing time, this event has something special for everyone.</p>
+                <ul class="about-highlights">
+                    <li>World-class performers and artists</li>
+                    <li>Interactive experiences and installations</li>
+                    <li>Premium food and beverage options</li>
+                    <li>VIP and general admission packages</li>
+                    <li>State-of-the-art sound and lighting</li>
+                </ul>
+            </div>
+            <div class="video-container">
+                <div class="video-placeholder">
+                    <div class="play-button">▶</div>
+                    <div class="video-text">Watch Event Highlights</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <h2>Connect with us?</h2>
+        <div class="social-media">
+    <a href="https://www.facebook.com/yourpage" class="social-icon facebook" aria-label="Facebook" target="_blank">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+    <a href="https://www.instagram.com/yourhandle" class="social-icon instagram" aria-label="Instagram" target="_blank">
+        <i class="fab fa-instagram"></i>
+    </a>
+    <a href="https://www.tiktok.com/@yourhandle" class="social-icon tiktok" aria-label="TikTok" target="_blank">
+        <i class="fab fa-tiktok"></i>
+    </a>
+</div>
+
+
+    </section>
+
+    <footer>
+        <p>&copy; 2026 EventHub. All rights reserved. Built with passion for connecting communities.</p>
+    </footer>
+
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Gallery slider functionality
+        const galleryTrack = document.querySelector('.gallery-track');
+        const galleryDots = document.querySelectorAll('.gallery-dot');
+        const prevBtn = document.querySelector('.gallery-arrow.prev');
+        const nextBtn = document.querySelector('.gallery-arrow.next');
+        let currentSlide = 0;
+        const totalSlides = 5;
+
+        function updateGallery() {
+            galleryTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+            galleryDots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        galleryDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentSlide = index;
+                updateGallery();
+            });
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateGallery();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateGallery();
+        });
+
+        // Auto-slide every 5 seconds
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateGallery();
+        }, 5000);
+
+        // Countdown timer functionality
+        function updateCountdown(timerElement) {
+            const dateStr = timerElement.getAttribute('data-date');
+            const eventDate = new Date(dateStr).getTime();
+            
+            const now = new Date().getTime();
+            const distance = eventDate - now;
+
+            if (distance < 0) {
+                timerElement.innerHTML = '<div class="countdown-item"><span class="countdown-value">Event Started!</span></div>';
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            const daysEl = timerElement.querySelector('[data-days]');
+            const hoursEl = timerElement.querySelector('[data-hours]');
+            const minutesEl = timerElement.querySelector('[data-minutes]');
+            const secondsEl = timerElement.querySelector('[data-seconds]');
+
+            if (daysEl) daysEl.textContent = days;
+            if (hoursEl) hoursEl.textContent = hours;
+            if (minutesEl) minutesEl.textContent = minutes;
+            if (secondsEl) secondsEl.textContent = seconds;
+        }
+
+        // Update all countdowns
+        const countdowns = document.querySelectorAll('.countdown-timer');
+        countdowns.forEach(timer => {
+            updateCountdown(timer);
+            setInterval(() => updateCountdown(timer), 1000);
+        });
+    </script>
+</body>
+</html>
